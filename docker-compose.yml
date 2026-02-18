@@ -1,0 +1,43 @@
+version: "3.9"
+services:
+  web:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./app:/var/www/html
+      - ./reverse-proxy/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - php
+
+  php:
+    build:
+      context: ./app
+    volumes:
+      - ./app:/var/www/html
+    environment:
+      APP_ENV: production
+
+  db:
+    image: mariadb:11
+    environment:
+      MYSQL_DATABASE: controlpanel
+      MYSQL_USER: cp_user
+      MYSQL_PASSWORD: change_me
+      MYSQL_ROOT_PASSWORD: root_change_me
+    volumes:
+      - db_data:/var/lib/mysql
+
+  redis:
+    image: redis:7-alpine
+
+  kuma:
+    image: louislam/uptime-kuma:1
+    volumes:
+      - kuma_data:/app/data
+    ports:
+      - "3001:3001"
+
+volumes:
+  db_data:
+  kuma_data:

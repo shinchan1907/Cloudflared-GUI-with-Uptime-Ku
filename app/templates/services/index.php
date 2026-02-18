@@ -1,0 +1,42 @@
+<section class="section-header">
+  <div>
+    <h2>Services</h2>
+    <p class="muted">Manage subdomains mapped to local ports.</p>
+  </div>
+  <a class="btn" href="/services/new">New service</a>
+</section>
+
+<?php if (!empty($message)): ?>
+  <div class="flash success"><?= htmlspecialchars($message, ENT_QUOTES, 'UTF-8') ?></div>
+<?php endif; ?>
+
+<div class="table">
+  <div class="table-row table-head">
+    <div>Name</div>
+    <div>Subdomain</div>
+    <div>Local Port</div>
+    <div>Protocol</div>
+    <div>Status</div>
+    <div></div>
+  </div>
+  <?php foreach ($services as $service): ?>
+    <div class="table-row">
+      <div><?= htmlspecialchars($service['name'], ENT_QUOTES, 'UTF-8') ?></div>
+      <div><?= htmlspecialchars($service['subdomain'], ENT_QUOTES, 'UTF-8') ?></div>
+      <div><?= (int)$service['local_port'] ?></div>
+      <div><?= htmlspecialchars($service['protocol'], ENT_QUOTES, 'UTF-8') ?></div>
+      <div><?= $service['enabled'] ? 'Enabled' : 'Disabled' ?></div>
+      <div>
+        <form method="post" action="/services/toggle">
+          <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(App\Auth::csrfToken(), ENT_QUOTES, 'UTF-8') ?>">
+          <input type="hidden" name="id" value="<?= (int)$service['id'] ?>">
+          <button class="btn ghost" type="submit">Toggle</button>
+        </form>
+      </div>
+    </div>
+  <?php endforeach; ?>
+</div>
+
+<?php if (empty($services)): ?>
+  <p class="muted">No services yet. Create your first one.</p>
+<?php endif; ?>

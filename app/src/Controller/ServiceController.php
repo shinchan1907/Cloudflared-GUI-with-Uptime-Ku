@@ -1,0 +1,86 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Controller;
+
+use App\Auth;
+use App\Config;
+use App\Service\ServiceRepository;
+use App\View;
+
+final class ServiceController
+{
+    private ServiceRepository $repo;
+
+    public function __construct()
+    {
+        $this->repo = new ServiceRepository();
+    }
+
+    public function index(): void
+    {
+        Auth::requireLogin();
+        $services = $this->repo->all();
+
+        View::render('services/index', [
+            'appName' => Config::get('APP_NAME', 'Control Panel'),
+            'services' => $services,
+            'message' => Auth::flash('message'),
+        ]);
+    }
+
+    public function create(): void
+    {
+        Auth::requireLogin();
+        View::render('services/new', [
+            'appName' => Config::get('APP_NAME', 'Control Panel'),
+            'error' => Auth::flash('error'),
+        ]);
+    }
+
+    public function store(): void
+    {
+        Auth::requireLogin();
+
+        if (!Auth::validateCsrf($_POST['csrf_token'] ?? null)) {
+            Auth::flash('error', 'Invalid session token.');
+            Auth::redirect('/services/new');
+        }
+
+        $name = trim((string)($_POST['name'] ?? ''));
+        $subdomain = trim((string)($_POST['subdomain'] ?? ''));
+        $localPort = (int)($_POST['local_port'] ?? 0);
+        $protocol = trim((string)($_POST['protocol'] ?? 'http'));
+
+        if ($name === '' || $subdomain === '' || $localPort <= 0) {
+            Auth::flash('error', 'Name, subdomain, and local port are required.');
+            Auth::redirect('/services/new');
+        }
+
+        if (!in_array($protocol, ['http', 'https'], true)) {
+            $protocol = 'http';
+        }
+
+        $this->repo->create($name, $subdomain, $localPort, $protocol);
+        Auth::flash('message', 'Service created.');
+        Auth::redirect('/services');
+    }
+
+    public function toggle(): void
+    {
+        Auth::requireLogin();
+
+        if (!Auth::validateCsrf($_POST['csrf_token'] ?? null)) {
+            Auth::flash('message', 'Invalid session token.');
+            Auth::redirect('/services');
+        }
+
+        $id = (int)($_POST['id'] ?? 0);
+        if ($id > 0) {
+            $this->repo->toggle($id);
+        }
+
+        Auth::redirect('/services');
+    }
+}

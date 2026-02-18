@@ -1,0 +1,93 @@
+:root {
+  --bg: #f5f2ee;
+  --ink: #1f1b16;
+  --muted: #6b5f52;
+  --accent: #2f6f5f;
+  --card: #ffffff;
+  --shadow: rgba(31, 27, 22, 0.12);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  color: var(--ink);
+  background: radial-gradient(circle at 20% 20%, #efe6da 0%, #f8f4ef 45%, #efece8 100%);
+  font-family: "Verdana", "Geneva", sans-serif;
+}
+
+.container {
+  width: min(1100px, 92vw);
+  margin: 0 auto;
+}
+
+.site-header {
+  padding: 32px 0 16px;
+}
+
+.brand {
+  font-family: "Palatino Linotype", "Book Antiqua", serif;
+  font-size: 28px;
+  letter-spacing: 0.5px;
+}
+
+.tagline {
+  color: var(--muted);
+  margin-top: 6px;
+}
+
+.hero {
+  padding: 24px 0 32px;
+}
+
+.hero h1 {
+  font-family: "Palatino Linotype", "Book Antiqua", serif;
+  font-size: clamp(32px, 4vw, 48px);
+  margin-bottom: 12px;
+}
+
+.lead {
+  color: var(--muted);
+  font-size: 18px;
+  line-height: 1.6;
+  max-width: 680px;
+}
+
+.actions {
+  margin-top: 20px;
+}
+
+.btn {
+  display: inline-block;
+  background: var(--accent);
+  color: #fff;
+  text-decoration: none;
+  padding: 12px 18px;
+  border-radius: 8px;
+  box-shadow: 0 8px 20px var(--shadow);
+}
+
+.grid {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  padding-bottom: 40px;
+}
+
+.card {
+  background: var(--card);
+  border-radius: 14px;
+  padding: 18px 20px;
+  box-shadow: 0 10px 30px var(--shadow);
+}
+
+.card h3 {
+  margin-top: 0;
+}
+
+.site-footer {
+  padding: 24px 0 40px;
+  color: var(--muted);
+}
