@@ -20,7 +20,7 @@
     <label>
       Subdomain
       <input type="text" name="subdomain" placeholder="myapp" required>
-      <span class="hint">The subdomain on your primary domain (e.g., myapp.example.com)</span>
+      <span class="hint">The subdomain on <strong><?= htmlspecialchars($primaryDomain, ENT_QUOTES, 'UTF-8') ?></strong></span>
     </label>
 
     <label>
