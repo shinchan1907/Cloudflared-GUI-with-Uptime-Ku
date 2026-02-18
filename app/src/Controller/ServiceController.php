@@ -50,22 +50,62 @@ final class ServiceController
         }
 
         $name = trim((string)($_POST['name'] ?? ''));
+        $type = (string)($_POST['domain_type'] ?? 'subdomain');
         $subdomain = trim((string)($_POST['subdomain'] ?? ''));
+        $customDomain = trim((string)($_POST['custom_domain'] ?? ''));
         $localPort = (int)($_POST['local_port'] ?? 0);
         $protocol = trim((string)($_POST['protocol'] ?? 'http'));
 
-        if ($name === '' || $subdomain === '' || $localPort <= 0) {
-            Auth::flash('error', 'Name, subdomain, and local port are required.');
+        if ($name === '' || $localPort <= 0) {
+            Auth::flash('error', 'Name and local port are required.');
             Auth::redirect('/services/new');
+        }
+
+        $isCustom = 0;
+        $finalSubdomain = null;
+        $finalDomain = null;
+
+        if ($type === 'subdomain') {
+            if ($subdomain === '') {
+                Auth::flash('error', 'Subdomain is required for subdomain mapping.');
+                Auth::redirect('/services/new');
+            }
+            $finalSubdomain = $subdomain;
+            $finalDomain = Config::get('PRIMARY_DOMAIN', 'example.com');
+        } else {
+            if ($customDomain === '') {
+                Auth::flash('error', 'Custom domain is required.');
+                Auth::redirect('/services/new');
+            }
+            $isCustom = 1;
+            $finalDomain = $customDomain;
         }
 
         if (!in_array($protocol, ['http', 'https'], true)) {
             $protocol = 'http';
         }
 
-        $this->repo->create($name, $subdomain, $localPort, $protocol);
-        Auth::flash('message', 'Service created.');
-        Auth::redirect('/services');
+        $id = $this->repo->create($name, $finalSubdomain, $finalDomain, $isCustom, $localPort, $protocol);
+        Auth::flash('message', 'Service created. Follow the setup steps below.');
+        Auth::redirect('/services/setup?id=' . $id);
+    }
+
+    public function setup(): void
+    {
+        Auth::requireLogin();
+        $id = (int)($_GET['id'] ?? 0);
+        $service = $this->repo->find($id);
+
+        if (!$service) {
+            Auth::flash('message', 'Service not found.');
+            Auth::redirect('/services');
+        }
+
+        View::render('services/setup', [
+            'appName' => Config::get('APP_NAME', 'Control Panel'),
+            'primaryDomain' => Config::get('PRIMARY_DOMAIN', 'example.com'),
+            'service' => $service,
+        ]);
     }
 
     public function toggle(): void

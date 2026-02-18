@@ -51,11 +51,29 @@ body {
   font-size: 20px;
   color: var(--accent);
   letter-spacing: -0.025em;
+  text-decoration: none;
 }
 
 .tagline {
   color: var(--muted);
   font-size: 13px;
+}
+
+.header-nav {
+  display: flex;
+  gap: 24px;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: var(--muted);
+  font-weight: 500;
+  font-size: 14px;
+  transition: color 0.2s ease;
+}
+
+.nav-link:hover {
+  color: var(--accent);
 }
 
 .header-actions {

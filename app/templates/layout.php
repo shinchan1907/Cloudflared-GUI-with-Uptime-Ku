@@ -16,6 +16,13 @@
         <div class="brand"><?= htmlspecialchars($appName ?? 'Control Panel', ENT_QUOTES, 'UTF-8') ?></div>
         <div class="tagline">Cloudflare Tunnel + Uptime Kuma control plane</div>
       </div>
+      <nav class="header-nav">
+        <?php if (App\Auth::check()): ?>
+          <a href="/" class="nav-link">Dashboard</a>
+          <a href="/services" class="nav-link">Services</a>
+          <a href="/settings" class="nav-link">Settings</a>
+        <?php endif; ?>
+      </nav>
       <div class="header-actions">
         <?php if (App\Auth::check()): ?>
           <form action="/logout" method="post">
