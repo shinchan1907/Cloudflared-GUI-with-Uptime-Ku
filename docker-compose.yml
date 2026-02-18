@@ -15,16 +15,18 @@ services:
       context: ./app
     volumes:
       - ./app:/var/www/html
+    env_file: .env
     environment:
       APP_ENV: production
 
   db:
     image: mariadb:11
+    env_file: .env
     environment:
-      MYSQL_DATABASE: controlpanel
-      MYSQL_USER: cp_user
-      MYSQL_PASSWORD: change_me
-      MYSQL_ROOT_PASSWORD: root_change_me
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASS}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASS:-root_change_me}
     volumes:
       - db_data:/var/lib/mysql
 

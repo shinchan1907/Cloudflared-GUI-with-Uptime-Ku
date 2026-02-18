@@ -35,6 +35,7 @@ final class ServiceController
         Auth::requireLogin();
         View::render('services/new', [
             'appName' => Config::get('APP_NAME', 'Control Panel'),
+            'primaryDomain' => Config::get('PRIMARY_DOMAIN', 'example.com'),
             'error' => Auth::flash('error'),
         ]);
     }

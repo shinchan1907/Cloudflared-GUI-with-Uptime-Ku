@@ -21,7 +21,8 @@ use App\Controller\HealthController;
 use App\Controller\AuthController;
 use App\Controller\ServiceController;
 
-Config::bootstrap(__DIR__ . '/../../.env');
+$envPath = file_exists(__DIR__ . '/../.env') ? __DIR__ . '/../.env' : __DIR__ . '/../../.env';
+Config::bootstrap($envPath);
 Auth::bootstrap();
 
 $router = new Router();

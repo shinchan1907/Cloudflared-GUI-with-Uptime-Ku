@@ -33,7 +33,7 @@ final class Database
         } catch (PDOException $e) {
             http_response_code(500);
             header('Content-Type: text/plain; charset=utf-8');
-            echo "Database connection failed.";
+            echo "Database connection failed: " . $e->getMessage();
             exit;
         }
 

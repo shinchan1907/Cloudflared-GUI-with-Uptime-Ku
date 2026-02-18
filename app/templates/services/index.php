@@ -25,7 +25,11 @@
       <div><?= htmlspecialchars($service['subdomain'], ENT_QUOTES, 'UTF-8') ?></div>
       <div><?= (int)$service['local_port'] ?></div>
       <div><?= htmlspecialchars($service['protocol'], ENT_QUOTES, 'UTF-8') ?></div>
-      <div><?= $service['enabled'] ? 'Enabled' : 'Disabled' ?></div>
+      <div>
+        <span class="status-pill <?= $service['enabled'] ? 'enabled' : 'disabled' ?>">
+          <?= $service['enabled'] ? 'Enabled' : 'Disabled' ?>
+        </span>
+      </div>
       <div>
         <form method="post" action="/services/toggle">
           <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(App\Auth::csrfToken(), ENT_QUOTES, 'UTF-8') ?>">
